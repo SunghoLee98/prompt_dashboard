@@ -48,7 +48,13 @@ data class User(
     val ratings: MutableSet<PromptRating> = mutableSetOf(),
     
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val refreshTokens: MutableSet<RefreshToken> = mutableSetOf()
+    val refreshTokens: MutableSet<RefreshToken> = mutableSetOf(),
+
+    @Column(name = "follower_count", nullable = false)
+    var followerCount: Int = 0,
+
+    @Column(name = "following_count", nullable = false)
+    var followingCount: Int = 0
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

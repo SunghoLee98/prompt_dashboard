@@ -80,7 +80,7 @@ export const PromptForm: React.FC<PromptFormProps> = ({
             label="제목"
             placeholder="프롬프트 제목을 입력하세요"
             error={errors.title?.message}
-            data-testid="prompt-title-input"
+            data-testid="title-input"
             {...register('title')}
           />
 
@@ -89,7 +89,7 @@ export const PromptForm: React.FC<PromptFormProps> = ({
             placeholder="프롬프트에 대한 간단한 설명을 입력하세요"
             rows={3}
             error={errors.description?.message}
-            data-testid="prompt-description-input"
+            data-testid="description-input"
             {...register('description')}
           />
 
@@ -98,7 +98,7 @@ export const PromptForm: React.FC<PromptFormProps> = ({
             placeholder="프롬프트 내용을 입력하세요"
             rows={10}
             error={errors.content?.message}
-            data-testid="prompt-content-input"
+            data-testid="content-textarea"
             {...register('content')}
           />
 
@@ -109,7 +109,7 @@ export const PromptForm: React.FC<PromptFormProps> = ({
               label: cat.name,
             }))}
             error={errors.category?.message}
-            data-testid="prompt-category-select"
+            data-testid="category-select"
             {...register('category')}
           />
 
@@ -127,7 +127,7 @@ export const PromptForm: React.FC<PromptFormProps> = ({
                 placeholder="태그를 입력하고 Enter 또는 추가 버튼을 누르세요"
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={tags.length >= 5}
-                data-testid="prompt-tags-input"
+                data-testid="tags-input"
               />
               <Button
                 type="button"
@@ -167,7 +167,7 @@ export const PromptForm: React.FC<PromptFormProps> = ({
             >
               취소
             </Button>
-            <Button type="submit" isLoading={isLoading} data-testid="prompt-submit-btn">
+            <Button type="submit" isLoading={isLoading} data-testid="create-prompt-button">
               {initialData ? '수정' : '저장'}
             </Button>
           </div>

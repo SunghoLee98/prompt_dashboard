@@ -97,6 +97,7 @@ export const RegisterForm: React.FC = () => {
               placeholder="your@email.com"
               error={errors.email?.message}
               disabled={isLoading}
+              data-testid="email-input"
               {...register('email')}
             />
 
@@ -106,6 +107,7 @@ export const RegisterForm: React.FC = () => {
               placeholder="nickname"
               error={errors.nickname?.message}
               disabled={isLoading}
+              data-testid="nickname-input"
               {...register('nickname')}
             />
 
@@ -115,6 +117,7 @@ export const RegisterForm: React.FC = () => {
               placeholder="••••••••"
               error={errors.password?.message}
               disabled={isLoading}
+              data-testid="password-input"
               {...register('password')}
             />
             <p className="text-xs text-gray-500">
@@ -166,6 +169,7 @@ export const RegisterForm: React.FC = () => {
               className="w-full"
               isLoading={isLoading}
               disabled={isLoading}
+              data-testid="register-button"
             >
               {isLoading ? '회원가입 중...' : '회원가입'}
             </Button>

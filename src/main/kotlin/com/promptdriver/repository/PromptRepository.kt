@@ -61,4 +61,12 @@ interface PromptRepository : JpaRepository<Prompt, Long> {
     @Modifying
     @Query("UPDATE Prompt p SET p.likeCount = p.likeCount - 1 WHERE p.id = :id AND p.likeCount > 0")
     fun decrementLikeCount(@Param("id") promptId: Long)
+
+    fun countByAuthorAndIsPublic(author: User, isPublic: Boolean): Long
+
+    fun findByAuthorIdInAndIsPublicOrderByCreatedAtDesc(
+        authorIds: List<Long>,
+        isPublic: Boolean,
+        pageable: Pageable
+    ): Page<Prompt>
 }

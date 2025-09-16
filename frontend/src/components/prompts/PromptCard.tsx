@@ -5,6 +5,7 @@ import { ko } from 'date-fns/locale';
 import type { Prompt } from '../../types';
 import { Card, CardBody } from '../common/Card';
 import { Heart, Eye, Tag, User, Star } from 'lucide-react';
+import { BookmarkButton } from '../bookmarks/BookmarkButton';
 
 interface PromptCardProps {
   prompt: Prompt;
@@ -41,10 +42,14 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt }) => {
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <div className="flex items-center gap-1 text-sm text-gray-600">
+              <Link
+                to={`/users/${prompt.author.id}`}
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <User className="h-3.5 w-3.5" />
                 <span>{prompt.author.nickname}</span>
-              </div>
+              </Link>
 
               <div className="flex items-center gap-3 text-sm text-gray-500">
                 {prompt.ratingCount > 0 && (
@@ -62,6 +67,12 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt }) => {
                   <Eye className="h-3.5 w-3.5" />
                   {prompt.viewCount}
                 </span>
+                <BookmarkButton
+                  promptId={prompt.id}
+                  isBookmarked={prompt.isBookmarked || false}
+                  bookmarkCount={prompt.bookmarkCount || 0}
+                  size="sm"
+                />
               </div>
             </div>
 

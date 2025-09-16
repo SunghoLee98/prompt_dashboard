@@ -14,6 +14,10 @@ import { PromptDetailPage } from './pages/PromptDetailPage';
 import { CreatePromptPage } from './pages/CreatePromptPage';
 import { EditPromptPage } from './pages/EditPromptPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { UserProfilePage } from './pages/UserProfilePage';
+import { FeedPage } from './pages/FeedPage';
+import { NotificationsPage } from './pages/NotificationsPage';
+// import { BookmarksPage } from './pages/BookmarksPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { TestPage } from './TestPage';
 
@@ -45,6 +49,7 @@ function App() {
               <Route path="/prompts" element={<PromptsListPage />} />
               <Route path="/prompts/:id" element={<PromptDetailPage />} />
               <Route path="/prompt/:id" element={<PromptDetailPage />} />
+              <Route path="/users/:userId" element={<UserProfilePage />} />
 
               {/* Protected routes */}
               <Route
@@ -71,6 +76,30 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route
+                path="/feed"
+                element={
+                  <PrivateRoute>
+                    <FeedPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <PrivateRoute>
+                    <NotificationsPage />
+                  </PrivateRoute>
+                }
+              />
+              {/* <Route
+                path="/bookmarks"
+                element={
+                  <PrivateRoute>
+                    <BookmarksPage />
+                  </PrivateRoute>
+                }
+              /> */}
 
               {/* 404 */}
               <Route path="*" element={<NotFoundPage />} />

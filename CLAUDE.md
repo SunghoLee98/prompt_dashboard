@@ -7,6 +7,8 @@
 - write result to 'docs/api_specifications.md', 'docs/data_models.md', 'docs/system_architecture.md'
 - Any important decisions MUST be documented in CLAUDE.md
 - All the main features MUST be written down in CLAUDE.md
+- if issue referenced by github issue, create branch with format 'feature/ISSUE_ID-short-description', e.g. 'feature/1-user-authentication'
+- if issue referenced by github issue, create pull request end of the feature implementation
 
 2. developer agent: implement features based on the architect's designs
 - MUST implement features according to the specifications in 'docs/api_specifications.md', 'docs/data_models.md', and 'docs/system_architecture.md'
@@ -158,8 +160,20 @@
 9. **Comment Editing**: Users can edit their comments when updating their rating
 10. **Null Handling**: Empty or whitespace-only comments stored as NULL to save space
 
+## User Follow System Design Decisions (Phase 5 - GitHub Issue #2)
+1. **Relationship Model**: Simple follower-following model with unidirectional follows
+2. **Count Denormalization**: follower_count and following_count stored in users table for performance
+3. **Database Triggers**: Automatic count maintenance via PostgreSQL triggers
+4. **Notification Architecture**: Async notification creation to prevent blocking on prompt publish
+5. **Feed Algorithm**: Time-based feed with 30-day cutoff for scalability
+6. **Cache Strategy**: Multi-layer caching (App → Redis → DB) with short TTLs
+7. **Real-time Options**: WebSocket/SSE/Long Polling with graceful fallback
+8. **Security Model**: Prevent self-follow, validate ownership, rate limit follow actions
+9. **Scalability Design**: Ready for sharding by user_id, read replicas for feed queries
+10. **Integration Points**: Hooks into prompt, rating, and bookmark systems for notifications
+
 ## Rating Comment System (Phase 3)
-**NEW FEATURE**: Enhanced rating system with user comments and review display
+**COMPLETED FEATURE**: Enhanced rating system with user comments and review display
 
 **Core Features**:
 1. **Rating with Comments**: Users can add optional text comments when rating prompts (up to 1,000 characters)
@@ -174,10 +188,78 @@
 - Proper sanitization and XSS protection for user-generated content
 - Pagination support for rating comments (10 per page default)
 
+## Phase 4 Features - User Bookmarks/Favorites System
+**COMPLETED FEATURE**: Comprehensive bookmark system for organizing and saving favorite prompts
+
+**Core Features**:
+1. **Basic Bookmarks**: Users can bookmark/unbookmark any prompt for quick access
+2. **Bookmark Folders**: Create custom folders to organize bookmarks into collections
+3. **Personal Dashboard**: View and manage all bookmarked prompts with search and filtering
+4. **Bookmark Statistics**: Track bookmark counts for prompts to show popularity
+5. **Discovery Enhancement**: Find trending/popular bookmarked prompts
+
+**Technical Requirements**:
+- New database tables: bookmark_folders, prompt_bookmarks
+- Add bookmark_count to prompts table for denormalized counting
+- API endpoints for bookmark CRUD operations and folder management
+- Frontend UI components for bookmark management and organization
+- Database triggers for maintaining denormalized bookmark counts
+- Search and filtering capabilities within bookmarks
+
+**Key Features**:
+1. **Bookmark Toggle**: One-click bookmark/unbookmark functionality on prompt cards
+2. **Folder Management**: Create, edit, delete, and organize bookmark folders
+3. **Folder Organization**: Move bookmarks between folders or leave uncategorized
+4. **Popular Bookmarks**: Discover most bookmarked prompts across different timeframes
+5. **Personal Collection**: Dedicated user dashboard for bookmark management
+6. **Search Integration**: Search within user's bookmarked prompts
+7. **Statistics**: Show bookmark counts alongside likes and ratings
+
 **Design Decisions**:
-1. **Optional Comments**: Comments are optional - users can rate without commenting
-2. **Comment Length Limit**: Maximum 1,000 characters to prevent abuse
-3. **Public Visibility**: All comments are public and visible to all users
-4. **Moderation Ready**: Architecture supports future moderation features
-5. **Chronological Display**: Comments displayed in order of creation (newest first)
-6. **User Attribution**: Comments show user nickname and creation timestamp
+1. **Self-Bookmark Prevention**: Users cannot bookmark their own prompts (like ratings)
+2. **Folder Limits**: Maximum 20 folders per user to prevent abuse
+3. **Folder Naming**: 3-50 character names, unique per user
+4. **Default Organization**: Uncategorized bookmarks stored without folder assignment
+5. **Cascade Behavior**: Deleting folders moves bookmarks to uncategorized
+6. **Performance**: Denormalized bookmark counts with database triggers
+7. **Discovery**: Popular bookmarks section for community discovery
+
+## Phase 5 Features - User Follow System (GitHub Issue #2)
+**NEW FEATURE**: Social networking capabilities with user-to-user following and activity notifications
+
+**Core Features**:
+1. **Follow System**: Follow/unfollow other users to stay updated on their activities
+2. **Follower Management**: View and manage follower/following lists with pagination
+3. **Activity Notifications**: Real-time notifications for new prompts from followed users
+4. **Personalized Feed**: Dedicated feed showing content from followed users
+5. **Follow Statistics**: Track follower/following counts for social proof
+6. **Notification Preferences**: Configurable notification settings per user
+
+**Technical Requirements**:
+- New database tables: user_follows, notifications
+- Add follower_count and following_count to users table
+- Database triggers for maintaining denormalized follow counts
+- API endpoints for follow operations and notification management
+- WebSocket/SSE support for real-time notifications (future enhancement)
+- Efficient feed generation with caching strategy
+
+**Key Features**:
+1. **One-Click Follow**: Simple follow/unfollow toggle on user profiles
+2. **Follow Status**: Check mutual follow relationships
+3. **Activity Stream**: See new prompts from followed users in chronological order
+4. **Notification Types**: NEW_PROMPT_FROM_FOLLOWED, USER_FOLLOWED, and more
+5. **Batch Operations**: Mark all notifications as read
+6. **Privacy Controls**: Configurable notification preferences
+7. **Discovery**: Suggested users based on follow patterns (future)
+
+**Design Decisions**:
+1. **Self-Follow Prevention**: Database constraint CHECK (follower_id != following_id)
+2. **Unique Follow Relationships**: One follow relationship per user pair
+3. **Denormalized Counts**: follower_count and following_count maintained via triggers
+4. **Cascade Deletion**: Follow relationships deleted when user is deleted
+5. **Notification Batch Creation**: Efficient bulk insert for follower notifications
+6. **Feed Generation**: 30-day cutoff for feed content to maintain performance
+7. **Notification Types**: Extensible enum system for future notification types
+8. **Unread Tracking**: Partial index on unread notifications for performance
+9. **Real-time Delivery**: WebSocket/SSE planned for Phase 4 implementation
+10. **Feed Caching**: 2-minute TTL for feed pages with incremental updates

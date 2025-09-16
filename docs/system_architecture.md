@@ -33,6 +33,9 @@ The Prompt Driver system is a web-based platform for sharing and discovering AI 
 │                  - UserService                               │
 │                  - PromptService                             │
 │                  - RatingService                             │
+│                  - BookmarkService                           │
+│                  - FollowService                             │
+│                  - NotificationService                       │
 │                  - ValidationService                         │
 └────────────────────┬───────────────────────────────────────┘
                      │
@@ -44,6 +47,10 @@ The Prompt Driver system is a web-based platform for sharing and discovering AI 
 │                  - PromptRepository                          │
 │                  - PromptLikeRepository                      │
 │                  - PromptRatingRepository                    │
+│                  - BookmarkFolderRepository                  │
+│                  - PromptBookmarkRepository                  │
+│                  - UserFollowRepository                      │
+│                  - NotificationRepository                    │
 │                  - RefreshTokenRepository                    │
 └────────────────────┬───────────────────────────────────────┘
                      │
@@ -56,6 +63,9 @@ The Prompt Driver system is a web-based platform for sharing and discovering AI 
 │                  - Likes Table                               │
 │                  - Ratings Table                             │
 │                  - Tags Table                                │
+│                  - Bookmark Tables                           │
+│                  - User Follows Table                        │
+│                  - Notifications Table                       │
 └─────────────────────────────────────────────────────────────┘
 ```
 

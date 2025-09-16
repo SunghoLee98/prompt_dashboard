@@ -30,6 +30,21 @@ enum class ErrorCode(
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "VAL001", "Validation error"),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "VAL002", "Invalid input"),
     
+    // Bookmark errors
+    BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "BOOKMARK001", "Bookmark not found"),
+    BOOKMARK_FOLDER_NOT_FOUND(HttpStatus.NOT_FOUND, "BOOKMARK002", "Bookmark folder not found"),
+    BOOKMARK_FOLDER_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "BOOKMARK003", "Maximum bookmark folders limit exceeded"),
+    FOLDER_NAME_ALREADY_EXISTS(HttpStatus.CONFLICT, "BOOKMARK004", "Folder with this name already exists"),
+    SELF_BOOKMARK_NOT_ALLOWED(HttpStatus.FORBIDDEN, "BOOKMARK005", "Cannot bookmark your own prompt"),
+
+    // Follow errors
+    SELF_FOLLOW_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "FOLLOW001", "Cannot follow yourself"),
+    ALREADY_FOLLOWING(HttpStatus.CONFLICT, "FOLLOW002", "Already following this user"),
+    NOT_FOLLOWING(HttpStatus.NOT_FOUND, "FOLLOW003", "Not following this user"),
+
+    // Notification errors
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIF001", "Notification not found"),
+
     // General errors
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SYS001", "Internal server error"),
     SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "SYS002", "Service temporarily unavailable")

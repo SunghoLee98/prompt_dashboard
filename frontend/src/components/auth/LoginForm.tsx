@@ -93,6 +93,7 @@ export const LoginForm: React.FC = () => {
               placeholder="your@email.com"
               error={errors.email?.message}
               disabled={isLoading}
+              data-testid="email-input"
               {...register('email')}
             />
 
@@ -102,6 +103,7 @@ export const LoginForm: React.FC = () => {
               placeholder="••••••••"
               error={errors.password?.message}
               disabled={isLoading}
+              data-testid="password-input"
               {...register('password')}
             />
 
@@ -123,6 +125,7 @@ export const LoginForm: React.FC = () => {
               className="w-full"
               isLoading={isLoading}
               disabled={isLoading}
+              data-testid="login-button"
             >
               {isLoading ? '로그인 중...' : '로그인'}
             </Button>
