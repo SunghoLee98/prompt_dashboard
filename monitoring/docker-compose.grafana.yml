@@ -11,10 +11,8 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     networks:
       - monitoring
-      - grafana_logging
     restart: unless-stopped
     depends_on:
       - loki
@@ -53,8 +51,6 @@ services:
     command:
       - -config.file=/etc/loki/loki.yml
       - -server.grpc-listen-port=9095
-      - -validation.reject-old-samples=false
-      - -validation.creation-grace-period=1h
     networks:
       - monitoring
     restart: unless-stopped
@@ -82,5 +78,3 @@ volumes:
 networks:
   monitoring:
     driver: bridge
-  grafana_logging:
-    external: true
