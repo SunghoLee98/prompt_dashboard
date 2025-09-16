@@ -1,0 +1,436 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Prompt Driver - Backend Monitoring",
+    "description": "Comprehensive backend monitoring dashboard with access logs, console logs, and metrics",
+    "tags": ["spring-boot", "prompt-driver", "backend", "logs", "metrics"],
+    "timezone": "browser",
+    "editable": true,
+    "graphTooltip": 1,
+    "version": 1,
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Application Status",
+        "type": "stat",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "up{job=\"spring-boot-app\"}",
+            "legendFormat": "Application Status",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 0,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "text": "DOWN",
+                    "color": "red"
+                  },
+                  "1": {
+                    "text": "UP",
+                    "color": "green"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Request Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "sum(rate(http_server_requests_total{job=\"spring-boot-app\"}[5m]))",
+            "legendFormat": "Requests/sec",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 3,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps",
+            "color": {
+              "mode": "palette-classic"
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Error Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "sum(rate(http_server_requests_total{job=\"spring-boot-app\",status=~\"[4-5]..\"}[5m]))",
+            "legendFormat": "Errors/sec",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 6,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps",
+            "color": {
+              "mode": "palette-classic",
+              "fixedColor": "red"
+            },
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 0.1
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Response Time (95th)",
+        "type": "stat",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"spring-boot-app\"}[5m])) by (le))",
+            "legendFormat": "95th Percentile",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 9,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 0.2
+                },
+                {
+                  "color": "red",
+                  "value": 0.5
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "JVM Memory Usage (%)",
+        "type": "stat",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "(jvm_memory_used_bytes{job=\"spring-boot-app\",area=\"heap\"} / jvm_memory_max_bytes{job=\"spring-boot-app\",area=\"heap\"}) * 100",
+            "legendFormat": "Heap Usage",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 12,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 70
+                },
+                {
+                  "color": "red",
+                  "value": 85
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Active Database Connections",
+        "type": "stat",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "hikaricp_connections_active{job=\"spring-boot-app\"}",
+            "legendFormat": "Active Connections",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 4,
+          "w": 3,
+          "x": 15,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "HTTP Request Volume by Endpoint",
+        "type": "timeseries",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "sum(rate(http_server_requests_total{job=\"spring-boot-app\"}[5m])) by (uri)",
+            "legendFormat": "{{uri}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 4
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Response Time Distribution",
+        "type": "timeseries",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket{job=\"spring-boot-app\"}[5m])) by (le))",
+            "legendFormat": "50th Percentile",
+            "refId": "A"
+          },
+          {
+            "datasource": "Prometheus",
+            "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"spring-boot-app\"}[5m])) by (le))",
+            "legendFormat": "95th Percentile",
+            "refId": "B"
+          },
+          {
+            "datasource": "Prometheus",
+            "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{job=\"spring-boot-app\"}[5m])) by (le))",
+            "legendFormat": "99th Percentile",
+            "refId": "C"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 4
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Console Logs - Recent Errors",
+        "type": "logs",
+        "targets": [
+          {
+            "datasource": "Loki",
+            "expr": "{job=\"spring-boot\", app=\"prompt-driver\", level=\"ERROR\"}",
+            "refId": "A",
+            "maxLines": 100
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 12
+        },
+        "options": {
+          "showTime": true,
+          "showLabels": true,
+          "sortOrder": "Descending"
+        }
+      },
+      {
+        "id": 10,
+        "title": "Console Logs - All Levels (Searchable)",
+        "type": "logs",
+        "targets": [
+          {
+            "datasource": "Loki",
+            "expr": "{job=\"spring-boot\", app=\"prompt-driver\"}",
+            "refId": "A",
+            "maxLines": 1000
+          }
+        ],
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 20
+        },
+        "options": {
+          "showTime": true,
+          "showLabels": true,
+          "sortOrder": "Descending",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false
+        }
+      },
+      {
+        "id": 11,
+        "title": "HTTP Access Logs by Status Code",
+        "type": "timeseries",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "sum(rate(http_server_requests_total{job=\"spring-boot-app\"}[5m])) by (status)",
+            "legendFormat": "Status {{status}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 32
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "JVM Memory Usage Over Time",
+        "type": "timeseries",
+        "targets": [
+          {
+            "datasource": "Prometheus",
+            "expr": "jvm_memory_used_bytes{job=\"spring-boot-app\",area=\"heap\"}",
+            "legendFormat": "Heap Used",
+            "refId": "A"
+          },
+          {
+            "datasource": "Prometheus",
+            "expr": "jvm_memory_max_bytes{job=\"spring-boot-app\",area=\"heap\"}",
+            "legendFormat": "Heap Max",
+            "refId": "B"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 32
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes"
+          }
+        }
+      },
+      {
+        "id": 13,
+        "title": "Search Console Logs",
+        "type": "text",
+        "gridPos": {
+          "h": 3,
+          "w": 24,
+          "x": 0,
+          "y": 40
+        },
+        "options": {
+          "content": "### Log Search Instructions\n\n**To search logs by level:**\n- ERROR logs: `{job=\"spring-boot\", app=\"prompt-driver\", level=\"ERROR\"}`\n- INFO logs: `{job=\"spring-boot\", app=\"prompt-driver\", level=\"INFO\"}`\n- WARN logs: `{job=\"spring-boot\", app=\"prompt-driver\", level=\"WARN\"}`\n\n**To search logs by keyword:**\n- Authentication logs: `{job=\"spring-boot\", app=\"prompt-driver\"} |= \"authentication\"`\n- Database logs: `{job=\"spring-boot\", app=\"prompt-driver\"} |= \"SQL\"`\n- Controller logs: `{job=\"spring-boot\", app=\"prompt-driver\", logger=~\".*controller.*\"}`\n\n**To search logs by time range:** Use the time picker in the top-right corner."
+        }
+      }
+    ],
+    "templating": {
+      "list": []
+    },
+    "annotations": {
+      "list": []
+    },
+    "schemaVersion": 16,
+    "links": []
+  }
+}

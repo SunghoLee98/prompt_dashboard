@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: prompt-driver-db
+    environment:
+      POSTGRES_DB: prompt_driver
+      POSTGRES_USER: prompt_user
+      POSTGRES_PASSWORD: prompt_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - prompt-driver-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prompt_user -d prompt_driver"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  prompt-driver-network:
+    driver: bridge

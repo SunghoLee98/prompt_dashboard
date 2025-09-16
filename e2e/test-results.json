@@ -1,0 +1,266 @@
+{
+  "config": {
+    "configFile": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/playwright.config.ts",
+    "rootDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "test-report",
+          "open": "never"
+        }
+      ],
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "iPad",
+        "name": "iPad",
+        "testDir": "/Users/sungho/Desktop/daou_study/prompt-driver/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 4,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "rating-comments-simple.spec.ts",
+      "file": "rating-comments-simple.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Rating Comment System - Simple Test",
+          "file": "rating-comments-simple.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete flow: Register, Create Prompt, Rate with Comment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 15886,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Clicked 5th star using button approach\n"
+                        },
+                        {
+                          "text": "✅ \"내 평가\" section is visible - rating was submitted\n"
+                        },
+                        {
+                          "text": "Found 44 star elements in user rating section\n"
+                        },
+                        {
+                          "text": "ℹ️ Comment text not immediately visible, might be in collapsed section\n"
+                        },
+                        {
+                          "text": "✅ User nickname found in comments\n"
+                        },
+                        {
+                          "text": "ℹ️ Checking for updated ratings...\n"
+                        },
+                        {
+                          "text": "Found 1 rating number displays\n"
+                        },
+                        {
+                          "text": "✅ Found updated rating: 5.0\n"
+                        },
+                        {
+                          "text": "📝 Checking for comment editing functionality...\n"
+                        },
+                        {
+                          "text": "✅ Edit button found, testing comment editing\n"
+                        },
+                        {
+                          "text": "🎯 Final Test Summary:\n"
+                        },
+                        {
+                          "text": "✅ User registration and authentication: PASSED\n"
+                        },
+                        {
+                          "text": "✅ Prompt creation: PASSED\n"
+                        },
+                        {
+                          "text": "✅ Rating submission (5 stars): PASSED\n"
+                        },
+                        {
+                          "text": "✅ Comment submission: PASSED\n"
+                        },
+                        {
+                          "text": "✅ Backend API integration: PASSED\n"
+                        },
+                        {
+                          "text": "✅ Frontend UI rendering: PASSED\n"
+                        },
+                        {
+                          "text": "🚀 Rating Comment System test completed successfully!\n"
+                        },
+                        {
+                          "text": "📊 All core functionality verified and working\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-16T01:33:44.664Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e541477bce950a812693-5ad4ebdf47eb82ece4fa",
+              "file": "rating-comments-simple.spec.ts",
+              "line": 5,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-16T01:33:44.232Z",
+    "duration": 16715.756,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

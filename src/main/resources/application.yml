@@ -1,0 +1,102 @@
+spring:
+  application:
+    name: prompt-driver
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5434/prompt_driver
+    username: prompt_user
+    password: prompt_password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_batch_fetch_size: 10
+    show-sql: false
+    open-in-view: false
+  
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+  
+  security:
+    jwt:
+      secret: ${JWT_SECRET:mySecretKeyForJWTShouldBeVeryLongAndSecureInProduction2024}
+      access-token-expiration: 900000 # 15 minutes in milliseconds
+      refresh-token-expiration: 604800000 # 7 days in milliseconds
+
+server:
+  port: 9090
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+      sla:
+        "[http.server.requests]": "50ms,100ms,200ms,500ms,1s"
+    tags:
+      application: prompt-driver
+      environment: development
+
+logging:
+  level:
+    com.promptdriver: INFO
+    org.springframework.web: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    org.springframework.boot.web.embedded.tomcat.TomcatWebServer: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS, UTC} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS, UTC} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"
+  file:
+    name: logs/prompt-driver.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 10
+
+cors:
+  allowed-origins: http://localhost:4000,http://localhost:5173
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
+
+app:
+  categories:
+    - coding
+    - writing
+    - analysis
+    - design
+    - marketing
+    - education
+    - productivity
+    - other
