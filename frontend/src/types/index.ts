@@ -42,7 +42,9 @@ export interface Prompt {
   author: Author;
   likeCount: number;
   viewCount: number;
+  bookmarkCount: number;
   isLiked?: boolean;
+  isBookmarked?: boolean;
   averageRating: number;
   ratingCount: number;
   userRating?: number;
@@ -88,3 +90,12 @@ export interface ErrorResponse {
   message: string;
   path: string;
 }
+
+// Bookmark types
+export interface BookmarkResponse {
+  bookmarked: boolean;
+  bookmarkCount: number;
+}
+
+// Export follow types
+export * from './follow';

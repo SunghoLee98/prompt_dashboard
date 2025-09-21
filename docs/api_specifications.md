@@ -188,6 +188,7 @@ Response (200 OK):
       },
       "likeCount": "int",
       "viewCount": "int",
+      "bookmarkCount": "int",
       "averageRating": "float",
       "ratingCount": "int",
       "createdAt": "datetime",
@@ -221,7 +222,9 @@ Response (200 OK):
   },
   "likeCount": "int",
   "viewCount": "int",
+  "bookmarkCount": "int",
   "isLiked": "boolean",
+  "isBookmarked": "boolean",
   "averageRating": "float",
   "ratingCount": "int",
   "userRating": "int",
@@ -263,6 +266,7 @@ Response (201 Created):
   },
   "likeCount": 0,
   "viewCount": 0,
+  "bookmarkCount": 0,
   "averageRating": 0.0,
   "ratingCount": 0,
   "createdAt": "datetime",
@@ -304,6 +308,7 @@ Response (200 OK):
   },
   "likeCount": "int",
   "viewCount": "int",
+  "bookmarkCount": "int",
   "averageRating": "float",
   "ratingCount": "int",
   "createdAt": "datetime",
@@ -572,9 +577,233 @@ Response (200 OK):
 Error Responses:
 - 404: Prompt not found
 
-### 5. Categories API
+### 5. Bookmark APIs
 
-#### 5.1 Get All Categories
+#### 5.1 Bookmark/Unbookmark Prompt
+**POST** `/api/prompts/{promptId}/bookmark`
+*Requires Authentication*
+
+Response (200 OK):
+```json
+{
+  "bookmarked": "boolean",
+  "bookmarkCount": "int"
+}
+```
+
+Error Responses:
+- 401: Unauthorized
+- 403: Cannot bookmark your own prompt
+- 404: Prompt not found
+
+#### 5.2 Get User's Bookmarks
+**GET** `/api/users/me/bookmarks`
+*Requires Authentication*
+
+Query Parameters:
+- `page`: int (default: 0)
+- `size`: int (default: 20, max: 100)
+- `sort`: string (default: "createdAt,desc")
+- `folderId`: long (optional) - Filter by specific folder
+- `search`: string (optional) - Search in bookmarked prompt titles and content
+
+Response (200 OK):
+```json
+{
+  "content": [
+    {
+      "id": "long",
+      "prompt": {
+        "id": "long",
+        "title": "string",
+        "description": "string",
+        "category": "string",
+        "tags": ["string"],
+        "author": {
+          "id": "long",
+          "nickname": "string"
+        },
+        "likeCount": "int",
+        "viewCount": "int",
+        "averageRating": "float",
+        "ratingCount": "int",
+        "createdAt": "datetime"
+      },
+      "folder": {
+        "id": "long",
+        "name": "string"
+      },
+      "createdAt": "datetime"
+    }
+  ],
+  "totalElements": "long",
+  "totalPages": "int",
+  "page": "int",
+  "size": "int",
+  "first": "boolean",
+  "last": "boolean"
+}
+```
+
+#### 5.3 Create Bookmark Folder
+**POST** `/api/users/me/bookmark-folders`
+*Requires Authentication*
+
+Request Body:
+```json
+{
+  "name": "string",
+  "description": "string"
+}
+```
+
+Response (201 Created):
+```json
+{
+  "id": "long",
+  "name": "string",
+  "description": "string",
+  "bookmarkCount": 0,
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+```
+
+Error Responses:
+- 400: Invalid input data
+- 401: Unauthorized
+- 409: Folder name already exists for user
+
+#### 5.4 Get User's Bookmark Folders
+**GET** `/api/users/me/bookmark-folders`
+*Requires Authentication*
+
+Response (200 OK):
+```json
+[
+  {
+    "id": "long",
+    "name": "string",
+    "description": "string",
+    "bookmarkCount": "int",
+    "createdAt": "datetime",
+    "updatedAt": "datetime"
+  }
+]
+```
+
+#### 5.5 Update Bookmark Folder
+**PUT** `/api/users/me/bookmark-folders/{id}`
+*Requires Authentication*
+
+Request Body:
+```json
+{
+  "name": "string",
+  "description": "string"
+}
+```
+
+Response (200 OK):
+```json
+{
+  "id": "long",
+  "name": "string",
+  "description": "string",
+  "bookmarkCount": "int",
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+```
+
+Error Responses:
+- 400: Invalid input data
+- 401: Unauthorized
+- 403: Can only update your own folders
+- 404: Folder not found
+- 409: Folder name already exists for user
+
+#### 5.6 Delete Bookmark Folder
+**DELETE** `/api/users/me/bookmark-folders/{id}`
+*Requires Authentication*
+
+Response (204 No Content)
+
+Error Responses:
+- 401: Unauthorized
+- 403: Can only delete your own folders
+- 404: Folder not found
+
+#### 5.7 Move Bookmark to Folder
+**PUT** `/api/users/me/bookmarks/{bookmarkId}/folder`
+*Requires Authentication*
+
+Request Body:
+```json
+{
+  "folderId": "long"
+}
+```
+
+Response (200 OK):
+```json
+{
+  "id": "long",
+  "promptId": "long",
+  "folderId": "long",
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+```
+
+Error Responses:
+- 400: Invalid folder ID
+- 401: Unauthorized
+- 403: Can only modify your own bookmarks
+- 404: Bookmark or folder not found
+
+#### 5.8 Get Popular Bookmarked Prompts
+**GET** `/api/prompts/popular-bookmarks`
+
+Query Parameters:
+- `page`: int (default: 0)
+- `size`: int (default: 20, max: 100)
+- `timeframe`: string (default: "all") - Options: "week", "month", "all"
+
+Response (200 OK):
+```json
+{
+  "content": [
+    {
+      "id": "long",
+      "title": "string",
+      "description": "string",
+      "category": "string",
+      "tags": ["string"],
+      "author": {
+        "id": "long",
+        "nickname": "string"
+      },
+      "likeCount": "int",
+      "viewCount": "int",
+      "bookmarkCount": "int",
+      "averageRating": "float",
+      "ratingCount": "int",
+      "createdAt": "datetime"
+    }
+  ],
+  "totalElements": "long",
+  "totalPages": "int",
+  "page": "int",
+  "size": "int",
+  "first": "boolean",
+  "last": "boolean"
+}
+```
+
+### 6. Categories API
+
+#### 6.1 Get All Categories
 **GET** `/api/v1/categories`
 
 Response (200 OK):
@@ -620,6 +849,14 @@ Response (200 OK):
 - Empty or whitespace-only comments are treated as null
 - One rating per user per prompt
 - Users cannot rate their own prompts
+
+### Bookmark
+- One bookmark per user per prompt
+- Users cannot bookmark their own prompts
+- Bookmark folder name: Required, 3-50 characters, unique per user
+- Bookmark folder description: Optional, maximum 200 characters
+- Maximum 20 folders per user
+- Bookmarks without folder assignment go to default "Uncategorized"
 
 ## Rate Limiting
 - Anonymous users: 100 requests per hour
@@ -711,6 +948,268 @@ data class RatingCommentResponse(
 )
 ```
 
+### 6. User Follow APIs
+
+#### 6.1 Follow a User
+**POST** `/api/users/{userId}/follow`
+*Requires Authentication*
+
+Path Parameters:
+- `userId`: long - ID of user to follow
+
+Response (204 No Content)
+
+Error Responses:
+- 400: Cannot follow yourself
+- 401: Unauthorized
+- 404: User not found
+- 409: Already following this user
+
+#### 6.2 Unfollow a User
+**DELETE** `/api/users/{userId}/follow`
+*Requires Authentication*
+
+Path Parameters:
+- `userId`: long - ID of user to unfollow
+
+Response (204 No Content)
+
+Error Responses:
+- 401: Unauthorized
+- 404: User not found or not following
+
+#### 6.3 Get User's Followers
+**GET** `/api/users/{userId}/followers`
+
+Path Parameters:
+- `userId`: long - User ID
+
+Query Parameters:
+- `page`: int (default: 0)
+- `size`: int (default: 20, max: 100)
+- `sort`: string (default: "createdAt,desc")
+
+Response (200 OK):
+```json
+{
+  "content": [
+    {
+      "id": "long",
+      "nickname": "string",
+      "followerCount": "int",
+      "followingCount": "int",
+      "promptCount": "int",
+      "isFollowing": "boolean",
+      "followedAt": "datetime"
+    }
+  ],
+  "totalElements": "long",
+  "totalPages": "int",
+  "page": "int",
+  "size": "int"
+}
+```
+
+#### 6.4 Get User's Following List
+**GET** `/api/users/{userId}/following`
+
+Path Parameters:
+- `userId`: long - User ID
+
+Query Parameters:
+- `page`: int (default: 0)
+- `size`: int (default: 20, max: 100)
+- `sort`: string (default: "createdAt,desc")
+
+Response (200 OK):
+```json
+{
+  "content": [
+    {
+      "id": "long",
+      "nickname": "string",
+      "followerCount": "int",
+      "followingCount": "int",
+      "promptCount": "int",
+      "isFollowing": "boolean",
+      "followedAt": "datetime"
+    }
+  ],
+  "totalElements": "long",
+  "totalPages": "int",
+  "page": "int",
+  "size": "int"
+}
+```
+
+#### 6.5 Check Follow Status
+**GET** `/api/users/{userId}/follow/status`
+*Requires Authentication*
+
+Path Parameters:
+- `userId`: long - User ID to check
+
+Response (200 OK):
+```json
+{
+  "isFollowing": "boolean",
+  "isFollowedBy": "boolean"
+}
+```
+
+#### 6.6 Get Feed from Followed Users
+**GET** `/api/users/me/feed`
+*Requires Authentication*
+
+Query Parameters:
+- `page`: int (default: 0)
+- `size`: int (default: 20, max: 100)
+- `sort`: string (default: "createdAt,desc")
+
+Response (200 OK):
+```json
+{
+  "content": [
+    {
+      "id": "long",
+      "title": "string",
+      "description": "string",
+      "category": "string",
+      "tags": ["string"],
+      "author": {
+        "id": "long",
+        "nickname": "string"
+      },
+      "likeCount": "int",
+      "viewCount": "int",
+      "averageRating": "float",
+      "ratingCount": "int",
+      "bookmarkCount": "int",
+      "createdAt": "datetime"
+    }
+  ],
+  "totalElements": "long",
+  "totalPages": "int",
+  "page": "int",
+  "size": "int"
+}
+```
+
+### 7. Notification APIs
+
+#### 7.1 Get User Notifications
+**GET** `/api/notifications`
+*Requires Authentication*
+
+Query Parameters:
+- `page`: int (default: 0)
+- `size`: int (default: 20, max: 100)
+- `sort`: string (default: "createdAt,desc")
+- `unreadOnly`: boolean (default: false)
+- `type`: string (optional) - Filter by notification type
+
+Response (200 OK):
+```json
+{
+  "content": [
+    {
+      "id": "long",
+      "type": "string",
+      "title": "string",
+      "message": "string",
+      "sender": {
+        "id": "long",
+        "nickname": "string"
+      },
+      "entityType": "string",
+      "entityId": "long",
+      "isRead": "boolean",
+      "readAt": "datetime",
+      "createdAt": "datetime"
+    }
+  ],
+  "totalElements": "long",
+  "totalPages": "int",
+  "unreadCount": "int",
+  "page": "int",
+  "size": "int"
+}
+```
+
+#### 7.2 Mark Notification as Read
+**PUT** `/api/notifications/{id}/read`
+*Requires Authentication*
+
+Path Parameters:
+- `id`: long - Notification ID
+
+Response (204 No Content)
+
+Error Responses:
+- 401: Unauthorized
+- 403: Cannot mark another user's notification
+- 404: Notification not found
+
+#### 7.3 Mark All Notifications as Read
+**PUT** `/api/notifications/read-all`
+*Requires Authentication*
+
+Response (204 No Content)
+
+#### 7.4 Delete Notification
+**DELETE** `/api/notifications/{id}`
+*Requires Authentication*
+
+Path Parameters:
+- `id`: long - Notification ID
+
+Response (204 No Content)
+
+Error Responses:
+- 401: Unauthorized
+- 403: Cannot delete another user's notification
+- 404: Notification not found
+
+#### 7.5 Get Unread Notification Count
+**GET** `/api/notifications/unread-count`
+*Requires Authentication*
+
+Response (200 OK):
+```json
+{
+  "count": "int"
+}
+```
+
+#### 7.6 Update Notification Settings
+**PUT** `/api/users/me/notification-settings`
+*Requires Authentication*
+
+Request Body:
+```json
+{
+  "newPromptFromFollowed": "boolean",
+  "userFollowed": "boolean",
+  "promptLiked": "boolean",
+  "promptRated": "boolean",
+  "promptBookmarked": "boolean",
+  "systemAnnouncements": "boolean"
+}
+```
+
+Response (200 OK):
+```json
+{
+  "newPromptFromFollowed": "boolean",
+  "userFollowed": "boolean",
+  "promptLiked": "boolean",
+  "promptRated": "boolean",
+  "promptBookmarked": "boolean",
+  "systemAnnouncements": "boolean",
+  "updatedAt": "datetime"
+}
+```
+
 ## Security Considerations
 
 ### XSS Protection
@@ -724,14 +1223,18 @@ data class RatingCommentResponse(
 - Comment length validation (max 1000 characters)
 - Rating value validation (1-5 integer only)
 - Null/empty comment handling
+- Prevent self-following in follow system
 
 ### Data Integrity
 - Enforce unique constraint on (user_id, prompt_id) at database level
 - Use transactions for rating updates that affect denormalized counts
 - Validate user ownership before allowing updates/deletes
+- Maintain consistent follow counts through database triggers
 
 ### Performance Optimization
 - Index on created_at for chronological sorting
 - Partial index on comments for filtered queries
 - Consider caching frequently accessed rating comments
 - Implement pagination with reasonable defaults (10 items per page)
+- Use database triggers for follow count maintenance
+- Efficient notification batch creation for followers

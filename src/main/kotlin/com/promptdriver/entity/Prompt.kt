@@ -41,7 +41,10 @@ data class Prompt(
     
     @Column(name = "rating_count", nullable = false)
     var ratingCount: Int = 0,
-    
+
+    @Column(name = "bookmark_count", nullable = false)
+    var bookmarkCount: Int = 0,
+
     @Column(name = "is_public", nullable = false)
     var isPublic: Boolean = true,
     
@@ -78,6 +81,16 @@ data class Prompt(
     fun decrementLikeCount() {
         if (this.likeCount > 0) {
             this.likeCount--
+        }
+    }
+
+    fun incrementBookmarkCount() {
+        this.bookmarkCount++
+    }
+
+    fun decrementBookmarkCount() {
+        if (this.bookmarkCount > 0) {
+            this.bookmarkCount--
         }
     }
     

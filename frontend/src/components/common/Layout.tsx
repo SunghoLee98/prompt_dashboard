@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from './Button';
-import { Menu, X, User, LogOut, PlusCircle } from 'lucide-react';
+import { Menu, X, User, LogOut, PlusCircle, Bookmark, Rss } from 'lucide-react';
+import { NotificationBell } from '../notifications/NotificationBell';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -38,12 +39,28 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   프롬프트 목록
                 </Link>
                 {user && (
-                  <Link
-                    to="/prompts/new"
-                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    새 프롬프트
-                  </Link>
+                  <>
+                    <Link
+                      to="/prompts/new"
+                      className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      새 프롬프트
+                    </Link>
+                    <Link
+                      to="/bookmarks"
+                      className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1"
+                    >
+                      <Bookmark className="h-4 w-4" />
+                      북마크
+                    </Link>
+                    <Link
+                      to="/feed"
+                      className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1"
+                    >
+                      <Rss className="h-4 w-4" />
+                      피드
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
@@ -51,6 +68,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="hidden md:flex md:items-center md:space-x-4">
               {user ? (
                 <>
+                  <NotificationBell />
                   <Link
                     to="/profile"
                     className="flex items-center text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
@@ -63,6 +81,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                     size="sm"
                     onClick={handleLogout}
                     className="flex items-center"
+                    data-testid="logout-button"
                   >
                     <LogOut className="h-4 w-4 mr-1" />
                     로그아웃
@@ -120,6 +139,22 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                     새 프롬프트
                   </Link>
                   <Link
+                    to="/bookmarks"
+                    className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Bookmark className="inline h-4 w-4 mr-1" />
+                    북마크
+                  </Link>
+                  <Link
+                    to="/feed"
+                    className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Rss className="inline h-4 w-4 mr-1" />
+                    피드
+                  </Link>
+                  <Link
                     to="/profile"
                     className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -133,6 +168,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                       setIsMobileMenuOpen(false);
                     }}
                     className="block w-full text-left text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                    data-testid="logout-button"
                   >
                     <LogOut className="inline h-4 w-4 mr-1" />
                     로그아웃
